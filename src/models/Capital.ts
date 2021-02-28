@@ -1,4 +1,4 @@
-import { prop } from "@typegoose/typegoose";
+import { getModelForClass, prop } from "@typegoose/typegoose";
 import { Entity } from "./Entity";
 
 class CapitalTeam {
@@ -22,3 +22,17 @@ export class Capital extends Entity {
   @prop({ type: String })
   recentInvestments: string[] = [];
 }
+
+const CapitalModel = getModelForClass(Capital, {
+  schemaOptions: {
+    toJSON: {
+      getters: true,
+      transform: function (doc, ret, options) {
+        delete ret._id;
+        delete ret.__v;
+      },
+    },
+  },
+});
+
+export default CapitalModel;

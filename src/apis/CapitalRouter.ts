@@ -2,49 +2,38 @@ import paginatify from "../middleware/paginatify";
 import handleAsyncErrors from "../utils/handleAsyncErrors";
 import parseSortString from "../utils/parseSortString";
 import HttpError from "../utils/HttpError";
-import PostModel, { Post } from "../models/Post";
+import CapitalModel, { Capital } from "../models/Capital";
 import { isValidHexObjectId } from "../utils/helper";
-import { PostQuery, PostPostBody, PostPutBody } from "./interfaces";
+import { ListQuery } from "./interfaces";
 import { Router, Request, Response, NextFunction } from "express";
 import { DocumentType } from "@typegoose/typegoose";
 
 export default (router: Router): Router => {
-  // Post CURD
+  // Capital CURD
   router
-    .route("/post")
+    .route("/capital")
 
-    // create a post
+    // create a capital
     .post(
       handleAsyncErrors(async (req: Request, res: Response) => {
         if (req.user.role !== "admin") {
           throw new HttpError(403);
         }
-        const post = new PostModel(req.body as PostPostBody);
-        post.author = req.user;
-        await post.save();
-        res.json(post);
+        const capital = new CapitalModel(req.body);
+        await capital.save();
+        res.json(capital);
       })
     )
-    // get all the posts
+    // get all the capitals
     .get(
       paginatify,
       handleAsyncErrors(async (req: Request, res: Response) => {
-        const queryParams = req.query as PostQuery;
+        const queryParams = req.query as ListQuery;
         const { limit, skip } = req.pagination;
-        const query = PostModel.find().populate("customer");
+        const query = CapitalModel.find().populate("customer");
         const sort = parseSortString(queryParams.order) || {
           createdAt: -1,
         };
-
-        query.select("-content");
-
-        if (queryParams.slug) {
-          query.find({ slug: new RegExp("^" + queryParams.slug) });
-        }
-
-        if (queryParams.tag) {
-          query.find({ tags: queryParams.tag });
-        }
 
         let total = await query.countDocuments();
         const page = await query
@@ -63,30 +52,33 @@ export default (router: Router): Router => {
     );
 
   router
-    .route("/post/:postId")
+    .route("/capital/:capitalId")
 
     .all(
       handleAsyncErrors(
         async (req: Request, res: Response, next: NextFunction) => {
-          const post = isValidHexObjectId(req.params.postId)
-            ? await PostModel.findById(req.params.postId)
-            : await PostModel.findOne({ slug: req.params.postId });
+          const capital = isValidHexObjectId(req.params.capitalId)
+            ? await CapitalModel.findById(req.params.capitalId)
+            : await CapitalModel.findOne({ slug: req.params.capitalId });
 
-          if (!post) {
-            throw new HttpError(404, `Post not found: ${req.params.postId}`);
+          if (!capital) {
+            throw new HttpError(
+              404,
+              `Capital not found: ${req.params.capitalId}`
+            );
           }
 
-          req.item = post;
+          req.item = capital;
           next();
         }
       )
     )
 
-    // get the post with that id
+    // get the capital with that id
     .get(
       handleAsyncErrors(async (req: Request, res: Response) => {
-        const post = req.item;
-        res.json(post);
+        const capital = req.item;
+        res.json(capital);
       })
     )
 
@@ -95,21 +87,21 @@ export default (router: Router): Router => {
         if (req.user.role !== "admin") {
           throw new HttpError(403);
         }
-        const post = req.item as DocumentType<Post>;
-        post.set(req.body as PostPutBody);
-        await post.save();
-        res.json(post);
+        const capital = req.item as DocumentType<Capital>;
+        capital.set(req.body);
+        await capital.save();
+        res.json(capital);
       })
     )
 
-    // delete the post with this id
+    // delete the capital with this id
     .delete(
       handleAsyncErrors(async (req: Request, res: Response) => {
         if (req.user.role !== "admin") {
           throw new HttpError(403);
         }
-        const post = req.item as DocumentType<Post>;
-        await post.remove();
+        const capital = req.item as DocumentType<Capital>;
+        await capital.remove();
         res.end();
       })
     );
