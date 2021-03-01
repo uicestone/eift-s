@@ -1,4 +1,9 @@
-import { prop, plugin, DocumentType } from "@typegoose/typegoose";
+import {
+  prop,
+  plugin,
+  DocumentType,
+  getModelForClass,
+} from "@typegoose/typegoose";
 import { Business } from "./Business";
 import { Capital } from "./Capital";
 import { Meeting } from "./Meeting";
@@ -33,3 +38,17 @@ export class Investment {
   })
   meetings: Meeting[] = [];
 }
+
+const InvestmentModel = getModelForClass(Investment, {
+  schemaOptions: {
+    toJSON: {
+      getters: true,
+      transform: function (doc, ret, options) {
+        delete ret._id;
+        delete ret.__v;
+      },
+    },
+  },
+});
+
+export default InvestmentModel;

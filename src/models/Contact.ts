@@ -1,4 +1,4 @@
-import { prop, plugin } from "@typegoose/typegoose";
+import { prop, plugin, getModelForClass } from "@typegoose/typegoose";
 import { Schema } from "mongoose";
 import updateTimes from "./plugins/updateTimes";
 
@@ -27,3 +27,17 @@ export class Contact {
   @prop()
   remarks?: string;
 }
+
+const ContactModel = getModelForClass(Contact, {
+  schemaOptions: {
+    toJSON: {
+      getters: true,
+      transform: function (doc, ret, options) {
+        delete ret._id;
+        delete ret.__v;
+      },
+    },
+  },
+});
+
+export default ContactModel;
