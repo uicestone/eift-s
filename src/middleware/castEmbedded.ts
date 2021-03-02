@@ -21,7 +21,7 @@ export default async function (
         delete body[key + "Id"];
       }
     });
-    if ([""].includes(key) && Array.isArray(body[key])) {
+    if (["files"].includes(key) && Array.isArray(body[key])) {
       body[key] = body[key].map((item: any) => item.id || item);
     }
   }
