@@ -5,23 +5,23 @@ import autoPopulate from "./plugins/autoPopulate";
 import updateTimes from "./plugins/updateTimes";
 
 class Address {
-  @prop({ required: true })
-  province!: string;
+  @prop()
+  province?: string;
 
   @prop({ required: true })
   city!: string;
 
-  @prop({ required: true })
-  county!: string;
+  @prop()
+  county?: string;
 
-  @prop({ required: true })
-  town!: string;
+  @prop()
+  town?: string;
 
-  @prop({ required: true })
-  detail!: string;
+  @prop()
+  detail?: string;
 
-  @prop({ required: true })
-  alias!: string;
+  @prop()
+  alias?: string;
 }
 
 @plugin(updateTimes)
