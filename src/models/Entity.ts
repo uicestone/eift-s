@@ -8,8 +8,8 @@ class Address {
   @prop()
   province?: string;
 
-  @prop({ required: true })
-  city!: string;
+  @prop()
+  city?: string;
 
   @prop()
   county?: string;
