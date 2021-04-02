@@ -21,6 +21,9 @@ export class Capital extends Entity {
 
   @prop({ type: String })
   recentInvestments: string[] = [];
+
+  @prop()
+  remarks?: string;
 }
 
 const CapitalModel = getModelForClass(Capital, {

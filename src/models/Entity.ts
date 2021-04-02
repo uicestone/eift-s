@@ -30,6 +30,9 @@ export class Entity {
   @prop({ required: true })
   name!: string;
 
+  @prop()
+  abbr?: string;
+
   @prop({
     ref: () => Contact,
     foreignField: "entity",
