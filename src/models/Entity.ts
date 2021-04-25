@@ -33,11 +33,12 @@ export class Entity {
   @prop()
   abbr?: string;
 
-  @prop({
-    ref: () => Contact,
-    foreignField: "entity",
-    localField: "_id",
-  })
+  // @prop({
+  //   ref: () => Contact,
+  //   foreignField: "entity",
+  //   localField: "_id",
+  // })
+  @prop({ type: Contact })
   contacts: DocumentType<Contact>[] = [];
 
   @prop({ type: Address })

@@ -8,14 +8,20 @@ import FileRouter from "./FileRouter";
 import UserRouter from "./UserRouter";
 import detectUa from "../middleware/detectUa";
 import { Express, Router, Response, Request } from "express";
+import BusinessRouter from "./BusinessRouter";
 
 export default (app: Express, router: Router): void => {
   // register routes
-  [AuthRouter, CapitalRouter, ConfigRouter, FileRouter, UserRouter].forEach(
-    (R) => {
-      router = R(router);
-    }
-  );
+  [
+    AuthRouter,
+    BusinessRouter,
+    CapitalRouter,
+    ConfigRouter,
+    FileRouter,
+    UserRouter,
+  ].forEach((R) => {
+    router = R(router);
+  });
 
   router.get("/", (req: Request, res: Response) => {
     res.send("Welcome!");

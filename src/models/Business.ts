@@ -1,4 +1,4 @@
-import { prop, getModelForClass } from "@typegoose/typegoose";
+import { getModelForClass } from "@typegoose/typegoose";
 import { Entity } from "./Entity";
 
 export class Business extends Entity {}

@@ -6,8 +6,8 @@ class ContactDetail {
   @prop({ required: true })
   type!: "fixed" | "mobile" | "email";
 
-  @prop({ required: true })
-  scene!: string;
+  @prop()
+  scene?: string;
 
   @prop({ required: true })
   value!: string;
@@ -22,7 +22,7 @@ export class Contact {
   name!: string;
 
   @prop({ type: ContactDetail })
-  contactDetails: Contact[] = [];
+  contactDetails: ContactDetail[] = [];
 
   @prop()
   remarks?: string;
